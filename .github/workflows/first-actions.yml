@@ -1,11 +1,20 @@
 name: My First GitHub Actions Testing:3
 
-on: [push]
-
+on:
+  workflow_dispatch:
 jobs:
+  Projrct-tag:
+    name:Projrct-tag:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: tag action run
+          uses: ./.github/workflows/action/tagcreate/symmetric_version_action.yml
+
   terrafrom-version:
     name: terrafrom-version
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
