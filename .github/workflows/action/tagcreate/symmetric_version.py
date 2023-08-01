@@ -5,17 +5,20 @@ def get_latest_tag():
     try:
         tags_output = subprocess.check_output(["git", "ls-remote", "--tags", "origin"])
         tags_list = tags_output.decode("utf-8").strip().split("\n")
-        latest_tag = max(tags_list, key=lambda x: [int(d) for d in re.findall(r'\d+', x)])
-        return latest_tag.strip()
+        latest_tag = max(tags_list, key=lambda x: [int(d) for d in re.findall(r'\d+', x)], default=None)
+        if latest_tag:
+            return latest_tag.strip()
+        else:
+            raise RuntimeError("No GitHub tags found.")
     except subprocess.CalledProcessError:
         raise RuntimeError("Failed to get the latest GitHub tag.")
 
 def symmetric_increment_version(version):
-    parts = version.split('.')
-    if len(parts) != 3:
-        raise ValueError("Invalid version format. Expected 'major.minor.patch'.")
+    match = re.match(r'^(\d+)\.(\d+)\.(\d+)$', version)
+    if not match:
+        raise ValueError(f"Invalid version format: {version}. Expected 'major.minor.patch'.")
 
-    major, minor, patch = map(int, parts)
+    major, minor, patch = map(int, match.groups())
     new_version = f"{minor}.{major}.{patch}"
     return new_version
 
