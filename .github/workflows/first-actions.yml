@@ -46,6 +46,11 @@ jobs:
             echo "Initial tag v1.0.0 created."
           fi
           echo "::set-output name=latest_tag::$latest_tag"
+
+      - name: Fetch GitHub tags using Personal Access Token (PAT)
+        run: |
+          hub api repos/pkj1993/GitHub-Actions-Testing/git/refs/tags | jq -r '.[].ref' | awk -F"/" '{print $NF}' > tags.txt
+          cat tags.txt          
           
       - name: Execute Python script for Semantic Versioning
         run: python ./.github/workflows/semantic_versioning.py
