@@ -26,5 +26,8 @@ jobs:
           wget https://github.com/github/hub/releases/download/v2.14.2/hub-linux-amd64-2.14.2.tgz
           tar xvf hub-linux-amd64-2.14.2.tgz
           sudo ./hub-linux-amd64-2.14.2/install
+      - name: Execute Python script for Semantic Versioning
+        run: python ./.github/workflows/semantic_versioning.py
+          
         
         
