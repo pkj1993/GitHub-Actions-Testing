@@ -1,11 +1,14 @@
 import sys
-import os
 
-def increment_version(version, position):
+def increment_version(version):
     parts = version.split('.')
-    parts[position] = str(int(parts[position]) + 1)
-    for i in range(position + 1, len(parts)):
-        parts[i] = '0'
+    for i in range(len(parts)):
+        if parts[i].isdigit():
+            parts[i] = str(int(parts[i]) + 1)
+        else:
+            # Handle the case when the version starts with non-numeric characters
+            parts[i] = str(int(parts[i][1:]) + 1)
+            parts[i] = 'v' + parts[i]
     return '.'.join(parts)
 
 def main():
@@ -17,13 +20,9 @@ def main():
     if not latest_tag:
         latest_tag = "0.0.0"
 
-    next_major = increment_version(latest_tag, 0)
-    next_minor = increment_version(latest_tag, 1)
-    next_patch = increment_version(latest_tag, 2)
+    next_version = increment_version(latest_tag)
 
-    print(f"Next Major Version: {next_major}")
-    print(f"Next Minor Version: {next_minor}")
-    print(f"Next Patch Version: {next_patch}")
+    print(f"Next Version: {next_version}")
 
 if __name__ == "__main__":
     main()
