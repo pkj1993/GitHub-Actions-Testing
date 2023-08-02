@@ -31,7 +31,20 @@ jobs:
         run: |
             git config --global user.name "pkj1993"
             git config --global user.email "pkj161293@gmail.com"
-            git config --global hub.protocol https  
+            git config --global hub.protocol https
+
+      - name: Fetch the latest tag
+        id: fetch_tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 || echo "")
+          echo "Latest tag: $latest_tag"
+          if [ -z "$latest_tag" ]; then
+            git tag v1.0.0
+            git push origin v1.0.0
+            latest_tag="v1.0.0"
+            echo "Initial tag v1.0.0 created."
+          fi
+          echo "::set-output name=latest_tag::$latest_tag"            
 
       - name: Fetch GitHub tags using Personal Access Token (PAT)
         run: |
@@ -39,7 +52,7 @@ jobs:
           cat tags.txt          
           
       - name: Execute Python script for Semantic Versioning
-        run: python ./.github/workflows/semantic_versioning.py
+        run: python ./.github/workflows/semantic_versioning.py ${{ steps.fetch_tag.outputs.latest_tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.secrets.PAT }}        
           
