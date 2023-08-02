@@ -1,40 +1,29 @@
-import subprocess
-import re
+import sys
+import os
 
-def get_latest_tag():
-    try:
-        tags_output = subprocess.check_output(["git", "ls-remote", "--tags", "origin"])
-        tags_list = tags_output.decode("utf-8").strip().split("\n")
-        latest_tag = max(tags_list, key=lambda x: [int(d) for d in re.findall(r'\d+', x)])
-        return latest_tag.strip()
-    except subprocess.CalledProcessError:
-        raise RuntimeError("Failed to get the latest GitHub tag.")
-
-def symmetric_increment_version(version):
-    match = re.match(r'^(\d+)\.(\d+)\.(\d+)$', version)
-    if not match:
-        raise ValueError(f"Invalid version format: {version}. Expected 'major.minor.patch'.")
-    
-    major, minor, patch = map(int, match.groups())
-    new_version = f"{minor}.{major}.{patch}"
-    return new_version
-
-def create_git_tag(version):
-    subprocess.run(["git", "tag", version])
-    subprocess.run(["git", "push", "origin", version])
+def increment_version(version, position):
+    parts = version.split('.')
+    parts[position] = str(int(parts[position]) + 1)
+    for i in range(position + 1, len(parts)):
+        parts[i] = '0'
+    return '.'.join(parts)
 
 def main():
-    try:
-        latest_tag = get_latest_tag()
-        print(f"Latest GitHub tag: {latest_tag}")
+    if len(sys.argv) != 2:
+        print("Usage: python semantic_versioning.py <latest_tag>")
+        sys.exit(1)
 
-        new_version = symmetric_increment_version(latest_tag)
-        print(f"New symmetric version: {new_version}")
+    latest_tag = sys.argv[1]
+    if not latest_tag:
+        latest_tag = "0.0.0"
 
-        create_git_tag(new_version)
-        print(f"Git tag '{new_version}' created and pushed.")
-    except Exception as e:
-        print(f"Error: {str(e)}")
+    next_major = increment_version(latest_tag, 0)
+    next_minor = increment_version(latest_tag, 1)
+    next_patch = increment_version(latest_tag, 2)
+
+    print(f"Next Major Version: {next_major}")
+    print(f"Next Minor Version: {next_minor}")
+    print(f"Next Patch Version: {next_patch}")
 
 if __name__ == "__main__":
     main()
