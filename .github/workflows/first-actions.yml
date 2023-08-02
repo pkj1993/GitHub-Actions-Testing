@@ -37,10 +37,9 @@ jobs:
 
       - name: Fetch GitHub tags using Personal Access Token (PAT)
         run: |
-          echo -n "${GITHUB_TOKEN}" > ~/.ghtoken
-          tags=$(hub api repos/pkj161293/pythonscripttest/tags | jq -r '.[].name')
-          echo "$tags" > tags.txt
-          cat tags.txt            
+          git fetch --tags origin
+          tags=$(git ls-remote --tags origin | awk -F"/" '{print $NF}' | grep -v '{}' > tags.txt)
+          cat tags.txt           
             
       - name: Execute Python script for Semantic Versioning
         run: python ./.github/workflows/semantic_versioning.py
