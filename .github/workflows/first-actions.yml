@@ -33,20 +33,6 @@ jobs:
             git config --global user.email "pkj161293@gmail.com"
             git config --global hub.protocol https  
 
-
-
-      - name: Fetch GitHub tags using Personal Access Token (PAT)
-        run: |
-          latest_tag=$(git describe --tags --abbrev=0 || echo "")
-          echo "Latest tag: $latest_tag"
-          if [ -z "$latest_tag" ]; then
-            git tag v1.0.0
-            git push origin v1.0.0
-            latest_tag="v1.0.0"
-            echo "Initial tag v1.0.0 created."
-          fi
-          echo "::set-output name=latest_tag::$latest_tag"
-
       - name: Fetch GitHub tags using Personal Access Token (PAT)
         run: |
           hub api repos/pkj1993/GitHub-Actions-Testing/git/refs/tags | jq -r '.[].ref' | awk -F"/" '{print $NF}' > tags.txt
