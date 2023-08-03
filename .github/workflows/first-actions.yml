@@ -39,6 +39,7 @@ jobs:
           latest_tag=$(git describe --tags --abbrev=0 || echo "")
           echo "Latest tag: $latest_tag"
              
+          echo "::set-output name=latest_tag::$latest_tag" 
 
       - name: Fetch GitHub tags using Personal Access Token (PAT)
         run: |
