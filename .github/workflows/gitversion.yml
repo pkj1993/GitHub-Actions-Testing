@@ -31,10 +31,7 @@ jobs:
       run: git branch --all
 
     - name: Fetch All Branches
-      run: git fetch --all
-
-    - name: Reset to a Valid State
-      run: git fetch --unshallow  
+      run: git fetch --all 
 
     - name: Fetch all history for all tags and branches
       run: git fetch --unshallow && git checkout develop && git checkout main
