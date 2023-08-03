@@ -76,6 +76,7 @@ jobs:
         echo "DIFF_SOURCE='$DIFF_SOURCE'"
         echo "DIFF_DEST='$DIFF_DEST'"
         echo "changed_services='$(echo "$changed_services" | sed 'N;s/\n/, /g')'"
+        echo "$service_versions_txt"
 
     - name: Set PR_BODY environment variable
       run: echo "PR_BODY=${service_versions_txt}" >> $GITHUB_ENV
