@@ -27,6 +27,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: update and install jq on the system
+      run: |
+          sudo apt-get update
+          sudo apt-get install jq      
+
     - name: Verify Branch Existence
       run: git branch --all
 
@@ -35,13 +40,7 @@ jobs:
 
     - name: Fetch all history for all tags and branches
       run: git fetch --unshallow && git checkout develop/githubtagtesting && git checkout main
-
-    #- name: Check base ref
-    #  run: echo "baseref='$GITHUB_BASE_REF' ref='$GITHUB_REF' headref='$GITHUB_HEAD_REF' refname='$GITHUB_REF_NAME' eventname='$GITHUB_EVENT_NAME'"
-    - name: update and install jq on the system
-      run: |
-          sudo apt-get update
-          sudo apt-get install jq
+   
     - name: Checkout to branch
       run: |
         if [ "${GITHUB_EVENT_NAME}" = 'push' ]; then
