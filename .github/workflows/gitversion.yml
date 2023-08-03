@@ -30,13 +30,7 @@ jobs:
     - name: update and install jq on the system
       run: |
           sudo apt-get update
-          sudo apt-get install -y jq      
-
-    - name: Verify Branch Existence
-      run: git branch --all
-
-    - name: Fetch All Branches
-      run: git fetch --all 
+          sudo apt-get install -y jq
 
     - name: Fetch all history for all tags and branches
       run: git fetch --unshallow && git checkout develop && git checkout main
