@@ -5,10 +5,7 @@ on:
     - main
   push:
     branches:
-    - develop
     - main
-    - 'release/**'
-    - 'hotfix/**'
 
 env:
   GITVERSION: 'gittools/gitversion:5.10.0-alpine.3.14-6.0'
