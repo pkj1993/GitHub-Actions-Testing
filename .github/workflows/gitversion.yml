@@ -80,6 +80,9 @@ jobs:
         echo "DIFF_DEST='$DIFF_DEST'"
         echo "changed_services='$(echo "$changed_services" | sed 'N;s/\n/, /g')'"
 
+    - name: Set PR_BODY environment variable
+      run: echo "PR_BODY=${service_versions_txt}" >> $GITHUB_ENV
+    
     - name: Calculate service versions
       id: calculate_service_versions
       run: |
