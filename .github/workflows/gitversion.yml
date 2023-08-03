@@ -105,6 +105,8 @@ jobs:
         echo "${PR_BODY}"
         echo "::set-output name=PR_BODY::$PR_BODY"
 
+        echo "$service_versions_txt"
+
     - name: Update PR description
       if: ${{ github.event_name == 'pull_request' }}
       run: |
