@@ -2,7 +2,13 @@ import sys
 
 def increment_version(version):
     parts = version.split('.')
-    parts[2] = str(int(parts[2]) + 1)
+    for i in range(len(parts)):
+        if parts[i].isdigit():
+            parts[i] = str(int(parts[i]) + 1)
+        else:
+            # Handle the case when the version starts with non-numeric characters
+            parts[i] = str(int(parts[i][1:]) + 1)
+            parts[i] = 'v' + parts[i]
     return '.'.join(parts)
 
 def main():
