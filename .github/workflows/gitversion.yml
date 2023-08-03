@@ -39,7 +39,7 @@ jobs:
       run: git fetch --all 
 
     - name: Fetch all history for all tags and branches
-      run: git fetch --unshallow && git checkout develop/githubtagtesting && git checkout main
+      run: git fetch --unshallow && git checkout develop && git checkout main
    
     - name: Checkout to branch
       run: |
