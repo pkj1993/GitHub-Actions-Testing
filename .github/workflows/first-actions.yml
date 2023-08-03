@@ -42,7 +42,9 @@ jobs:
           echo "::set-output name=latest_tag::$latest_tag" 
 
       - name: Execute Python script for Semantic Versioning
-        run: python ./.github/workflows/semantic_versioning.py ${{ steps.fetch_tag.outputs.latest_tag }}
+        run: |
+             echo "::set-output name=latest_tag::$latest_tag" 
+             python ./.github/workflows/semantic_versioning.py ${{ steps.fetch_tag.outputs.latest_tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.secrets.PAT }}        
           
