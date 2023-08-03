@@ -11,7 +11,7 @@ on:
 
 env:
   GITVERSION: 'gittools/gitversion:5.10.0-alpine.3.14-6.0'
-  MAIN_BRANCHES: ("develop" "main")
+  MAIN_BRANCHES: ("develop/githubtagtesting" "main")
   GITVERSION_TAG_PROPERTY_PULL_REQUESTS: .SemVer
   GITVERSION_TAG_PROPERTY_DEFAULT: .SemVer
   GITVERSION_TAG_PROPERTY_DEVELOP: .MajorMinorPatch,.PreReleaseLabelWithDash
@@ -27,21 +27,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: update and install jq on the system
+      run: |
+          sudo apt-get update
+          sudo apt-get install -y jq      
+
     - name: Verify Branch Existence
       run: git branch --all
 
     - name: Fetch All Branches
-      run: git fetch --all
-
-    - name: Reset to a Valid State
-      run: git fetch --unshallow  
+      run: git fetch --all 
 
     - name: Fetch all history for all tags and branches
-      run: git fetch --unshallow && git checkout develop && git checkout main
-
-    #- name: Check base ref
-    #  run: echo "baseref='$GITHUB_BASE_REF' ref='$GITHUB_REF' headref='$GITHUB_HEAD_REF' refname='$GITHUB_REF_NAME' eventname='$GITHUB_EVENT_NAME'"
-
+      run: git fetch --unshallow && git checkout develop/githubtagtesting && git checkout main
+   
     - name: Checkout to branch
       run: |
         if [ "${GITHUB_EVENT_NAME}" = 'push' ]; then
