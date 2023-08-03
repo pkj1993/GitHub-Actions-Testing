@@ -22,10 +22,19 @@ env:
 jobs:
   gitversion:
     name: gitversion
-    runs-on: ubuntu-18.04
+    runs-on: self-hosted
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Verify Branch Existence
+      run: git branch --all
+
+    - name: Fetch All Branches
+      run: git fetch --all
+
+    - name: Reset to a Valid State
+      run: git fetch --unshallow  
 
     - name: Fetch all history for all tags and branches
       run: git fetch --unshallow && git checkout develop && git checkout main
