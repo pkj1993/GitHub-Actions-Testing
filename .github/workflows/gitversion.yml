@@ -31,7 +31,10 @@ jobs:
       run: |
           sudo apt-get update
           sudo apt-get install -y jq
-
+          
+    - name: git purn
+      run: git remote prune origin
+      
     - name: Fetch all history for all tags and branches
       run: git fetch --unshallow && git checkout develop && git checkout main
    
