@@ -1,10 +1,7 @@
 name: Release Workflow
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
+ push:
 
 jobs:
   release:
