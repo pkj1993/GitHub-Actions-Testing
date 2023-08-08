@@ -20,6 +20,7 @@ jobs:
           # Extract version bump type from pull request description
           version_bump=$(grep -oP '(?<=\[ \] ).*' $GITHUB_EVENT_PATH | head -n1)
           echo "::set-output name=version_bump::$version_bump"
+          echo $version_bump
 
       - name: Run Custom Release Action
         uses: ./.github/actions/custom-release-action
