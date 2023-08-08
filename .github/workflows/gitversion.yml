@@ -11,7 +11,7 @@ on:
 
 env:
   GITVERSION: 'gittools/gitversion:5.10.0-alpine.3.14-6.0'
-  MAIN_BRANCHES: ("develop/githubtagtesting" "main")
+  MAIN_BRANCHES: ("develop" "main")
   GITVERSION_TAG_PROPERTY_PULL_REQUESTS: .SemVer
   GITVERSION_TAG_PROPERTY_DEFAULT: .SemVer
   GITVERSION_TAG_PROPERTY_DEVELOP: .MajorMinorPatch,.PreReleaseLabelWithDash
@@ -30,16 +30,10 @@ jobs:
     - name: update and install jq on the system
       run: |
           sudo apt-get update
-          sudo apt-get install -y jq      
-
-    - name: Verify Branch Existence
-      run: git branch --all
-
-    - name: Fetch All Branches
-      run: git fetch --all 
-
+          sudo apt-get install -y jq
+      
     - name: Fetch all history for all tags and branches
-      run: git fetch --unshallow && git checkout develop/githubtagtesting && git checkout main
+      run: git fetch --unshallow && git checkout develop && git checkout main
    
     - name: Checkout to branch
       run: |
@@ -76,13 +70,17 @@ jobs:
           changed_services=`git diff "${DIFF_SOURCE}" "${DIFF_DEST}" --name-only | grep -o '^apps/[a-zA-Z-]*' | sort | uniq`
         fi
         changed_services=$(printf '%s' "$changed_services" | jq --raw-input --slurp '.')
-        echo "::set-output name=changed_services::$changed_services"
-        echo "::set-output name=diff_source::$DIFF_SOURCE"
-        echo "::set-output name=diff_dest::$DIFF_DEST"
+        echo "changed_services=$changed_services" >> $GITHUB_ENV
+        echo "diff_source=$DIFF_SOURCE" >> $GITHUB_ENV
+        echo "diff_dest=$DIFF_DEST" >> $GITHUB_ENV
         echo "DIFF_SOURCE='$DIFF_SOURCE'"
         echo "DIFF_DEST='$DIFF_DEST'"
         echo "changed_services='$(echo "$changed_services" | sed 'N;s/\n/, /g')'"
+        echo "$service_versions_txt"
 
+    - name: Set PR_BODY environment variable
+      run: echo "PR_BODY=${service_versions_txt}" >> $GITHUB_ENV
+    
     - name: Calculate service versions
       id: calculate_service_versions
       run: |
@@ -107,6 +105,8 @@ jobs:
         PR_BODY=$(printf '%s' "$PR_BODY" | jq --raw-input --slurp '.')
         echo "${PR_BODY}"
         echo "::set-output name=PR_BODY::$PR_BODY"
+
+        echo "$service_versions_txt"
 
     - name: Update PR description
       if: ${{ github.event_name == 'pull_request' }}
