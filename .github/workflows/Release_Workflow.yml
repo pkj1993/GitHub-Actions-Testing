@@ -1,0 +1,28 @@
+name: Release Workflow
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Extract Version Bump Type
+        id: extract_version_bump
+        run: |
+          # Extract version bump type from pull request description
+          version_bump=$(grep -oP '(?<=\[ \] ).*' $GITHUB_EVENT_PATH | head -n1)
+          echo "::set-output name=version_bump::$version_bump"
+
+      - name: Run Custom Release Action
+        uses: ./.github/actions/custom-release-action
+        with:
+          github-token: ${{ secrets.REPO_TOKEN }}
+          version-bump: ${{ steps.extract_version_bump.outputs.version_bump }}
